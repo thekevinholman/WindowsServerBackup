@@ -2,7 +2,7 @@
   <Manifest>
     <Identity>
       <ID>SCOM.WindowsServerBackup</ID>
-      <Version>1.0.0.0</Version>
+      <Version>1.0.0.1</Version>
     </Identity>
     <Name>SCOM.WindowsServerBackup</Name>
     <References>
@@ -107,6 +107,94 @@
           </WriteAction>
         </WriteActions>
       </Rule>
+      <Rule ID="SCOM.WindowsServerBackup.BackupCatalogCorrupted.Alert.Rule" Enabled="true" Target="SCOM.WindowsServerBackup.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>Alert</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.EventProvider">
+            <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+            <LogName>Microsoft-Windows-Backup</LogName>
+            <Expression>
+              <SimpleExpression>
+                <ValueExpression>
+                  <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                </ValueExpression>
+                <Operator>Equal</Operator>
+                <ValueExpression>
+                  <Value Type="UnsignedInteger">2</Value>
+                </ValueExpression>
+              </SimpleExpression>
+            </Expression>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+            <Priority>1</Priority>
+            <Severity>2</Severity>
+            <AlertName />
+            <AlertDescription />
+            <AlertOwner />
+            <AlertMessageId>$MPElement[Name="SCOM.WindowsServerBackup.BackupCatalogCorrupted.Alert.Rule.AlertMessage"]$</AlertMessageId>
+            <AlertParameters>
+              <AlertParameter1>$Data/EventDescription$</AlertParameter1>
+            </AlertParameters>
+            <Suppression />
+            <Custom1 />
+            <Custom2 />
+            <Custom3 />
+            <Custom4 />
+            <Custom5 />
+            <Custom6 />
+            <Custom7 />
+            <Custom8 />
+            <Custom9 />
+            <Custom10 />
+          </WriteAction>
+        </WriteActions>
+      </Rule>
+      <Rule ID="SCOM.WindowsServerBackup.BackupCatalogOnDiskCorrupted.Alert.Rule" Enabled="true" Target="SCOM.WindowsServerBackup.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>Alert</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.EventProvider">
+            <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+            <LogName>Microsoft-Windows-Backup</LogName>
+            <Expression>
+              <SimpleExpression>
+                <ValueExpression>
+                  <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                </ValueExpression>
+                <Operator>Equal</Operator>
+                <ValueExpression>
+                  <Value Type="UnsignedInteger">3</Value>
+                </ValueExpression>
+              </SimpleExpression>
+            </Expression>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+            <Priority>1</Priority>
+            <Severity>2</Severity>
+            <AlertName />
+            <AlertDescription />
+            <AlertOwner />
+            <AlertMessageId>$MPElement[Name="SCOM.WindowsServerBackup.BackupCatalogOnDiskCorrupted.Alert.Rule.AlertMessage"]$</AlertMessageId>
+            <AlertParameters>
+              <AlertParameter1>$Data/EventDescription$</AlertParameter1>
+            </AlertParameters>
+            <Suppression />
+            <Custom1 />
+            <Custom2 />
+            <Custom3 />
+            <Custom4 />
+            <Custom5 />
+            <Custom6 />
+            <Custom7 />
+            <Custom8 />
+            <Custom9 />
+            <Custom10 />
+          </WriteAction>
+        </WriteActions>
+      </Rule>
       <Rule ID="SCOM.WindowsServerBackup.BackupCompletedWithErrors.Alert.Rule" Enabled="true" Target="SCOM.WindowsServerBackup.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>Alert</Category>
         <DataSources>
@@ -129,7 +217,7 @@
         <WriteActions>
           <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
             <Priority>1</Priority>
-            <Severity>1</Severity>
+            <Severity>2</Severity>
             <AlertName />
             <AlertDescription />
             <AlertOwner />
@@ -173,7 +261,7 @@
         <WriteActions>
           <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
             <Priority>1</Priority>
-            <Severity>1</Severity>
+            <Severity>2</Severity>
             <AlertName />
             <AlertDescription />
             <AlertOwner />
@@ -239,7 +327,49 @@
           </WriteAction>
         </WriteActions>
       </Rule>
-      <Rule ID="SCOM.WindowsServerBackup.BackupFailedDueToAnotherBackupRunning.Alert.Rule" Enabled="true" Target="SCOM.WindowsServerBackup.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="SCOM.WindowsServerBackup.BackupFailedDueToAnotherBackup.Alert.Rule" Enabled="true" Target="SCOM.WindowsServerBackup.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>Alert</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.EventProvider">
+            <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+            <LogName>Microsoft-Windows-Backup</LogName>
+            <Expression>
+              <RegExExpression>
+                <ValueExpression>
+                  <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                </ValueExpression>
+                <Operator>MatchesRegularExpression</Operator>
+                <Pattern>6|20</Pattern>
+              </RegExExpression>
+            </Expression>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+            <Priority>1</Priority>
+            <Severity>2</Severity>
+            <AlertName />
+            <AlertDescription />
+            <AlertOwner />
+            <AlertMessageId>$MPElement[Name="SCOM.WindowsServerBackup.BackupFailedDueToAnotherBackup.Alert.Rule.AlertMessage"]$</AlertMessageId>
+            <AlertParameters>
+              <AlertParameter1>$Data/EventDescription$</AlertParameter1>
+            </AlertParameters>
+            <Suppression />
+            <Custom1 />
+            <Custom2 />
+            <Custom3 />
+            <Custom4 />
+            <Custom5 />
+            <Custom6 />
+            <Custom7 />
+            <Custom8 />
+            <Custom9 />
+            <Custom10 />
+          </WriteAction>
+        </WriteActions>
+      </Rule>
+      <Rule ID="SCOM.WindowsServerBackup.BackupFailedDueToBackupEngineService.Alert.Rule" Enabled="true" Target="SCOM.WindowsServerBackup.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>Alert</Category>
         <DataSources>
           <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.EventProvider">
@@ -252,7 +382,7 @@
                 </ValueExpression>
                 <Operator>Equal</Operator>
                 <ValueExpression>
-                  <Value Type="UnsignedInteger">6</Value>
+                  <Value Type="UnsignedInteger">17</Value>
                 </ValueExpression>
               </SimpleExpression>
             </Expression>
@@ -265,7 +395,7 @@
             <AlertName />
             <AlertDescription />
             <AlertOwner />
-            <AlertMessageId>$MPElement[Name="SCOM.WindowsServerBackup.BackupFailedDueToAnotherBackupRunning.Alert.Rule.AlertMessage"]$</AlertMessageId>
+            <AlertMessageId>$MPElement[Name="SCOM.WindowsServerBackup.BackupFailedDueToBackupEngineService.Alert.Rule.AlertMessage"]$</AlertMessageId>
             <AlertParameters>
               <AlertParameter1>$Data/EventDescription$</AlertParameter1>
             </AlertParameters>
@@ -306,8 +436,6 @@
           <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
             <Priority>1</Priority>
             <Severity>2</Severity>
-            <AlertName />
-            <AlertDescription />
             <AlertOwner />
             <AlertMessageId>$MPElement[Name="SCOM.WindowsServerBackup.BackupFailedDueToLowFreeSpaceStorage.Alert.Rule.AlertMessage"]$</AlertMessageId>
             <AlertParameters>
@@ -354,6 +482,136 @@
             <AlertDescription />
             <AlertOwner />
             <AlertMessageId>$MPElement[Name="SCOM.WindowsServerBackup.BackupFailedDueToMissingStorage.Alert.Rule.AlertMessage"]$</AlertMessageId>
+            <AlertParameters>
+              <AlertParameter1>$Data/EventDescription$</AlertParameter1>
+            </AlertParameters>
+            <Suppression />
+            <Custom1 />
+            <Custom2 />
+            <Custom3 />
+            <Custom4 />
+            <Custom5 />
+            <Custom6 />
+            <Custom7 />
+            <Custom8 />
+            <Custom9 />
+            <Custom10 />
+          </WriteAction>
+        </WriteActions>
+      </Rule>
+      <Rule ID="SCOM.WindowsServerBackup.BackupFailedDueToRecoveryPlanning.Alert.Rule" Enabled="true" Target="SCOM.WindowsServerBackup.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>Alert</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.EventProvider">
+            <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+            <LogName>Microsoft-Windows-Backup</LogName>
+            <Expression>
+              <RegExExpression>
+                <ValueExpression>
+                  <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                </ValueExpression>
+                <Operator>MatchesRegularExpression</Operator>
+                <Pattern>16|22</Pattern>
+              </RegExExpression>
+            </Expression>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+            <Priority>1</Priority>
+            <Severity>2</Severity>
+            <AlertName />
+            <AlertDescription />
+            <AlertOwner />
+            <AlertMessageId>$MPElement[Name="SCOM.WindowsServerBackup.BackupFailedDueToRecoveryPlanning.Alert.Rule.AlertMessage"]$</AlertMessageId>
+            <AlertParameters>
+              <AlertParameter1>$Data/EventDescription$</AlertParameter1>
+            </AlertParameters>
+            <Suppression />
+            <Custom1 />
+            <Custom2 />
+            <Custom3 />
+            <Custom4 />
+            <Custom5 />
+            <Custom6 />
+            <Custom7 />
+            <Custom8 />
+            <Custom9 />
+            <Custom10 />
+          </WriteAction>
+        </WriteActions>
+      </Rule>
+      <Rule ID="SCOM.WindowsServerBackup.BackupFailedDueToRemoteFolderNotWriteable.Alert.Rule" Enabled="true" Target="SCOM.WindowsServerBackup.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>Alert</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.EventProvider">
+            <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+            <LogName>Microsoft-Windows-Backup</LogName>
+            <Expression>
+              <SimpleExpression>
+                <ValueExpression>
+                  <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                </ValueExpression>
+                <Operator>Equal</Operator>
+                <ValueExpression>
+                  <Value Type="UnsignedInteger">52</Value>
+                </ValueExpression>
+              </SimpleExpression>
+            </Expression>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+            <Priority>1</Priority>
+            <Severity>2</Severity>
+            <AlertName />
+            <AlertDescription />
+            <AlertOwner />
+            <AlertMessageId>$MPElement[Name="SCOM.WindowsServerBackup.BackupFailedDueToRemoteFolderNotWriteable.Alert.Rule.AlertMessage"]$</AlertMessageId>
+            <AlertParameters>
+              <AlertParameter1>$Data/EventDescription$</AlertParameter1>
+            </AlertParameters>
+            <Suppression />
+            <Custom1 />
+            <Custom2 />
+            <Custom3 />
+            <Custom4 />
+            <Custom5 />
+            <Custom6 />
+            <Custom7 />
+            <Custom8 />
+            <Custom9 />
+            <Custom10 />
+          </WriteAction>
+        </WriteActions>
+      </Rule>
+      <Rule ID="SCOM.WindowsServerBackup.BackupFailedDueToScheduleSettings.Alert.Rule" Enabled="true" Target="SCOM.WindowsServerBackup.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>Alert</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.EventProvider">
+            <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+            <LogName>Microsoft-Windows-Backup</LogName>
+            <Expression>
+              <SimpleExpression>
+                <ValueExpression>
+                  <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                </ValueExpression>
+                <Operator>Equal</Operator>
+                <ValueExpression>
+                  <Value Type="UnsignedInteger">18</Value>
+                </ValueExpression>
+              </SimpleExpression>
+            </Expression>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+            <Priority>1</Priority>
+            <Severity>2</Severity>
+            <AlertName />
+            <AlertDescription />
+            <AlertOwner />
+            <AlertMessageId>$MPElement[Name="SCOM.WindowsServerBackup.BackupFailedDueToScheduleSettings.Alert.Rule.AlertMessage"]$</AlertMessageId>
             <AlertParameters>
               <AlertParameter1>$Data/EventDescription$</AlertParameter1>
             </AlertParameters>
@@ -459,6 +717,138 @@
           </WriteAction>
         </WriteActions>
       </Rule>
+      <Rule ID="SCOM.WindowsServerBackup.BackupFailedToStartWithError.Alert.Rule" Enabled="true" Target="SCOM.WindowsServerBackup.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>Alert</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.EventProvider">
+            <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+            <LogName>Microsoft-Windows-Backup</LogName>
+            <Expression>
+              <SimpleExpression>
+                <ValueExpression>
+                  <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                </ValueExpression>
+                <Operator>Equal</Operator>
+                <ValueExpression>
+                  <Value Type="UnsignedInteger">19</Value>
+                </ValueExpression>
+              </SimpleExpression>
+            </Expression>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+            <Priority>1</Priority>
+            <Severity>2</Severity>
+            <AlertName />
+            <AlertDescription />
+            <AlertOwner />
+            <AlertMessageId>$MPElement[Name="SCOM.WindowsServerBackup.BackupFailedToStartWithError.Alert.Rule.AlertMessage"]$</AlertMessageId>
+            <AlertParameters>
+              <AlertParameter1>$Data/EventDescription$</AlertParameter1>
+            </AlertParameters>
+            <Suppression />
+            <Custom1 />
+            <Custom2 />
+            <Custom3 />
+            <Custom4 />
+            <Custom5 />
+            <Custom6 />
+            <Custom7 />
+            <Custom8 />
+            <Custom9 />
+            <Custom10 />
+          </WriteAction>
+        </WriteActions>
+      </Rule>
+      <Rule ID="SCOM.WindowsServerBackup.BackupMetadataIsCorrupted.Alert.Rule" Enabled="true" Target="SCOM.WindowsServerBackup.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>Alert</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.EventProvider">
+            <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+            <LogName>Microsoft-Windows-Backup</LogName>
+            <Expression>
+              <SimpleExpression>
+                <ValueExpression>
+                  <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                </ValueExpression>
+                <Operator>Equal</Operator>
+                <ValueExpression>
+                  <Value Type="UnsignedInteger">12</Value>
+                </ValueExpression>
+              </SimpleExpression>
+            </Expression>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+            <Priority>1</Priority>
+            <Severity>2</Severity>
+            <AlertName />
+            <AlertDescription />
+            <AlertOwner />
+            <AlertMessageId>$MPElement[Name="SCOM.WindowsServerBackup.BackupMetadataIsCorrupted.Alert.Rule.AlertMessage"]$</AlertMessageId>
+            <AlertParameters>
+              <AlertParameter1>$Data/EventDescription$</AlertParameter1>
+            </AlertParameters>
+            <Suppression />
+            <Custom1 />
+            <Custom2 />
+            <Custom3 />
+            <Custom4 />
+            <Custom5 />
+            <Custom6 />
+            <Custom7 />
+            <Custom8 />
+            <Custom9 />
+            <Custom10 />
+          </WriteAction>
+        </WriteActions>
+      </Rule>
+      <Rule ID="SCOM.WindowsServerBackup.BackupOfVolumeIsCorrupted.Alert.Rule" Enabled="true" Target="SCOM.WindowsServerBackup.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>Alert</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.EventProvider">
+            <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+            <LogName>Microsoft-Windows-Backup</LogName>
+            <Expression>
+              <SimpleExpression>
+                <ValueExpression>
+                  <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                </ValueExpression>
+                <Operator>Equal</Operator>
+                <ValueExpression>
+                  <Value Type="UnsignedInteger">11</Value>
+                </ValueExpression>
+              </SimpleExpression>
+            </Expression>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+            <Priority>1</Priority>
+            <Severity>2</Severity>
+            <AlertName />
+            <AlertDescription />
+            <AlertOwner />
+            <AlertMessageId>$MPElement[Name="SCOM.WindowsServerBackup.BackupOfVolumeIsCorrupted.Alert.Rule.AlertMessage"]$</AlertMessageId>
+            <AlertParameters>
+              <AlertParameter1>$Data/EventDescription$</AlertParameter1>
+            </AlertParameters>
+            <Suppression />
+            <Custom1 />
+            <Custom2 />
+            <Custom3 />
+            <Custom4 />
+            <Custom5 />
+            <Custom6 />
+            <Custom7 />
+            <Custom8 />
+            <Custom9 />
+            <Custom10 />
+          </WriteAction>
+        </WriteActions>
+      </Rule>
       <Rule ID="SCOM.WindowsServerBackup.CompletedWithWarningsDueToDiskErrors.Alert.Rule" Enabled="true" Target="SCOM.WindowsServerBackup.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>Alert</Category>
         <DataSources>
@@ -481,11 +871,51 @@
         <WriteActions>
           <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
             <Priority>1</Priority>
-            <Severity>1</Severity>
+            <Severity>2</Severity>
             <AlertName />
             <AlertDescription />
             <AlertOwner />
             <AlertMessageId>$MPElement[Name="SCOM.WindowsServerBackup.CompletedWithWarningsDueToDiskErrors.Alert.Rule.AlertMessage"]$</AlertMessageId>
+            <AlertParameters>
+              <AlertParameter1>$Data/EventDescription$</AlertParameter1>
+            </AlertParameters>
+            <Suppression />
+            <Custom1 />
+            <Custom2 />
+            <Custom3 />
+            <Custom4 />
+            <Custom5 />
+            <Custom6 />
+            <Custom7 />
+            <Custom8 />
+            <Custom9 />
+            <Custom10 />
+          </WriteAction>
+        </WriteActions>
+      </Rule>
+      <Rule ID="SCOM.WindowsServerBackup.ScheduledBackupGroupPolicyConflict.Alert.Rule" Enabled="true" Target="SCOM.WindowsServerBackup.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>Alert</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.EventProvider">
+            <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+            <LogName>Microsoft-Windows-Backup</LogName>
+            <Expression>
+              <RegExExpression>
+                <ValueExpression>
+                  <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                </ValueExpression>
+                <Operator>MatchesRegularExpression</Operator>
+                <Pattern>15|21</Pattern>
+              </RegExExpression>
+            </Expression>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+            <Priority>1</Priority>
+            <Severity>2</Severity>
+            <AlertOwner />
+            <AlertMessageId>$MPElement[Name="SCOM.WindowsServerBackup.ScheduledBackupGroupPolicyConflict.Alert.Rule.AlertMessage"]$</AlertMessageId>
             <AlertParameters>
               <AlertParameter1>$Data/EventDescription$</AlertParameter1>
             </AlertParameters>
@@ -526,8 +956,6 @@
           <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
             <Priority>1</Priority>
             <Severity>1</Severity>
-            <AlertName />
-            <AlertDescription />
             <AlertOwner />
             <AlertMessageId>$MPElement[Name="SCOM.WindowsServerBackup.StorageFreeSpaceIsLow.Alert.Rule.AlertMessage"]$</AlertMessageId>
             <AlertParameters>
@@ -552,8 +980,8 @@
       <UnitMonitor ID="SCOM.WindowsServerBackup.LastBackupStatus.Monitor" Accessibility="Public" Enabled="true" Target="SCOM.WindowsServerBackup.Class" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.2SingleEventLog2StateMonitorType" ConfirmDelivery="false">
         <Category>AvailabilityHealth</Category>
         <OperationalStates>
-          <OperationalState ID="FirstEventRaised" MonitorTypeStateID="FirstEventRaised" HealthState="Warning" />
           <OperationalState ID="SecondEventRaised" MonitorTypeStateID="SecondEventRaised" HealthState="Success" />
+          <OperationalState ID="FirstEventRaised" MonitorTypeStateID="FirstEventRaised" HealthState="Warning" />
         </OperationalStates>
         <Configuration>
           <FirstComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</FirstComputerName>
@@ -564,7 +992,7 @@
                 <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
               </ValueExpression>
               <Operator>MatchesRegularExpression</Operator>
-              <Pattern>5|6|7|8|9|13|23|25|49|50|51</Pattern>
+              <Pattern>2|3|5|6|7|8|9|11|12|13|15|16|17|18|19|20|21|22|23|25|49|50|51|52</Pattern>
             </RegExExpression>
           </FirstExpression>
           <SecondComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</SecondComputerName>
@@ -591,8 +1019,8 @@
           <AlertSeverity>Warning</AlertSeverity>
         </AlertSettings>
         <OperationalStates>
-          <OperationalState ID="MissingEventRaised" MonitorTypeStateID="MissingEventRaised" HealthState="Warning" />
           <OperationalState ID="TimerEventRaised" MonitorTypeStateID="TimerEventRaised" HealthState="Success" />
+          <OperationalState ID="MissingEventRaised" MonitorTypeStateID="MissingEventRaised" HealthState="Warning" />
         </OperationalStates>
         <Configuration>
           <MissingComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</MissingComputerName>
@@ -657,7 +1085,6 @@
     </FolderItems>
     <StringResources>
       <StringResource ID="SCOM.WindowsServerBackup.BackupFailed.Alert.Rule.AlertMessage" />
-      <StringResource ID="SCOM.WindowsServerBackup.BackupFailedDueToAnotherBackupRunning.Alert.Rule.AlertMessage" />
       <StringResource ID="SCOM.WindowsServerBackup.BackupCompletedWithErrors.Alert.Rule.AlertMessage" />
       <StringResource ID="SCOM.WindowsServerBackup.BackupCancelled.Alert.Rule.AlertMessage" />
       <StringResource ID="SCOM.WindowsServerBackup.BackupFailedDueToSnapshot.Alert.Rule.AlertMessage" />
@@ -668,6 +1095,17 @@
       <StringResource ID="SCOM.WindowsServerBackup.BackupFailedDueToLowFreeSpaceStorage.Alert.Rule.AlertMessage" />
       <StringResource ID="SCOM.WindowsServerBackup.StorageFreeSpaceIsLow.Alert.Rule.AlertMessage" />
       <StringResource ID="SCOM.WindowsServerBackup.MissingBackupCompletedEvent.Monitor.AlertMessage" />
+      <StringResource ID="SCOM.WindowsServerBackup.BackupCatalogCorrupted.Alert.Rule.AlertMessage" />
+      <StringResource ID="SCOM.WindowsServerBackup.BackupCatalogOnDiskCorrupted.Alert.Rule.AlertMessage" />
+      <StringResource ID="SCOM.WindowsServerBackup.BackupFailedDueToAnotherBackup.Alert.Rule.AlertMessage" />
+      <StringResource ID="SCOM.WindowsServerBackup.BackupFailedDueToBackupEngineService.Alert.Rule.AlertMessage" />
+      <StringResource ID="SCOM.WindowsServerBackup.BackupFailedDueToRecoveryPlanning.Alert.Rule.AlertMessage" />
+      <StringResource ID="SCOM.WindowsServerBackup.BackupFailedDueToRemoteFolderNotWriteable.Alert.Rule.AlertMessage" />
+      <StringResource ID="SCOM.WindowsServerBackup.BackupFailedDueToScheduleSettings.Alert.Rule.AlertMessage" />
+      <StringResource ID="SCOM.WindowsServerBackup.BackupFailedToStartWithError.Alert.Rule.AlertMessage" />
+      <StringResource ID="SCOM.WindowsServerBackup.BackupMetadataIsCorrupted.Alert.Rule.AlertMessage" />
+      <StringResource ID="SCOM.WindowsServerBackup.BackupOfVolumeIsCorrupted.Alert.Rule.AlertMessage" />
+      <StringResource ID="SCOM.WindowsServerBackup.ScheduledBackupGroupPolicyConflict.Alert.Rule.AlertMessage" />
     </StringResources>
   </Presentation>
   <LanguagePacks>
@@ -675,84 +1113,158 @@
       <DisplayStrings>
         <DisplayString ElementID="SCOM.WindowsServerBackup">
           <Name>Windows Server Backup</Name>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.Alert.View">
-          <Name>Alerts</Name>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupCancelled.Alert.Rule">
-          <Name>Windows Server Backup Cancelled Alert Rule</Name>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupCancelled.Alert.Rule.AlertMessage">
-          <Name>Windows Server Backup Cancelled Alert</Name>
-          <Description>Event Description: {0}</Description>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupCompletedWithErrors.Alert.Rule">
-          <Name>Windows Server Backup Completed With Errors Alert Rule</Name>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupCompletedWithErrors.Alert.Rule.AlertMessage">
-          <Name>Windows Server Backup Completed With Errors Alert</Name>
-          <Description>Event Description: {0}</Description>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupEncounteredErrors.Alert.Rule">
-          <Name>Windows Server Backup Encountered Errors Alert Rule</Name>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupEncounteredErrors.Alert.Rule.AlertMessage">
-          <Name>Windows Server Backup Encountered Errors Alert</Name>
-          <Description>Event Description: {0}</Description>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailed.Alert.Rule">
-          <Name>Windows Server Backup Failed Alert Rule</Name>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailed.Alert.Rule.AlertMessage">
-          <Name>Windows Server Backup Failed Alert</Name>
-          <Description>Event Description: {0}</Description>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToAnotherBackupRunning.Alert.Rule">
-          <Name>Windows Server Backup Failed Due To Another BackupRunning Alert Rule</Name>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToAnotherBackupRunning.Alert.Rule.AlertMessage">
-          <Name>Windows Server Backup Failed Due To Another Backup Running Alert</Name>
-          <Description>Event Description: {0}</Description>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToLowFreeSpaceStorage.Alert.Rule">
-          <Name>Windows Server Backup Failed Due To Low Free SpaceStorage Alert Rule</Name>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToLowFreeSpaceStorage.Alert.Rule.AlertMessage">
-          <Name>Windows Server Backup Failed Due To Low Free Space Storage Alert</Name>
-          <Description>Event Description: {0}</Description>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToMissingStorage.Alert.Rule">
-          <Name>Windows Server Backup Failed Due To Missing Storage Alert Rule</Name>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToMissingStorage.Alert.Rule.AlertMessage">
-          <Name>Windows Server Backup Failed Due To Missing Storage Alert</Name>
-          <Description>Event Description: {0}</Description>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToSnapshot.Alert.Rule">
-          <Name>Windows Server Backup Failed Due To Snapshot Alert Rule</Name>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToSnapshot.Alert.Rule.AlertMessage">
-          <Name>Windows Server Backup Failed Due To Snapshot Alert</Name>
-          <Description>Event Description: {0}</Description>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedForVolume.Alert.Rule">
-          <Name>Windows Server Backup Failed For Volume Alert Rule</Name>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedForVolume.Alert.Rule.AlertMessage">
-          <Name>Windows Server Backup Failed For Volume Alert</Name>
-          <Description>Event Description: {0}</Description>
+          <Description>This Management Pack discovers and monitors the Windows Server Backup Feature
+The MP supports Windows Server 2008R2 through at least Windows Server 2019
+
+Developed by Kevin Holman
+https://github.com/thekevinholman/WindowsServerBackup</Description>
         </DisplayString>
         <DisplayString ElementID="SCOM.WindowsServerBackup.Class">
           <Name>Windows Server Backup Class</Name>
         </DisplayString>
         <DisplayString ElementID="SCOM.WindowsServerBackup.Class.Discovery">
           <Name>Windows Server Backup Class Discovery</Name>
+        </DisplayString>		
+        <DisplayString ElementID="SCOM.WindowsServerBackup.Root.Folder">
+          <Name>Windows Server Backup</Name>
+        </DisplayString>		
+        <DisplayString ElementID="SCOM.WindowsServerBackup.Alert.View">
+          <Name>Alerts</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.State.View">
+          <Name>State</Name>
+        </DisplayString>		
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupCancelled.Alert.Rule">
+          <Name>Windows Server Backup Cancelled Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupCancelled.Alert.Rule.AlertMessage">
+          <Name>Backup Cancelled Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupCatalogCorrupted.Alert.Rule">
+          <Name>Windows Server Backup Catalog Corrupted Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupCatalogCorrupted.Alert.Rule.AlertMessage">
+          <Name>Backup Catalog Corrupted Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupCatalogOnDiskCorrupted.Alert.Rule">
+          <Name>Windows Server Backup Catalog On Disk Corrupted Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupCatalogOnDiskCorrupted.Alert.Rule.AlertMessage">
+          <Name>Backup Catalog On Disk Corrupted Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupCompletedWithErrors.Alert.Rule">
+          <Name>Windows Server Backup Completed With Errors Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupCompletedWithErrors.Alert.Rule.AlertMessage">
+          <Name>Backup Completed With Errors Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupEncounteredErrors.Alert.Rule">
+          <Name>Windows Server Backup Encountered Errors Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupEncounteredErrors.Alert.Rule.AlertMessage">
+          <Name>Backup Encountered Errors Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailed.Alert.Rule">
+          <Name>Windows Server Backup Failed Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailed.Alert.Rule.AlertMessage">
+          <Name>Backup Failed Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToAnotherBackup.Alert.Rule">
+          <Name>Windows Server Backup Failed Due To Another Backup Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToAnotherBackup.Alert.Rule.AlertMessage">
+          <Name>Backup Failed Due To Another Backup Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToBackupEngineService.Alert.Rule">
+          <Name>Windows Server Backup Backup Failed Due To Backup Engine Service Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToBackupEngineService.Alert.Rule.AlertMessage">
+          <Name>Backup Failed Due To Backup Engine Service Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToLowFreeSpaceStorage.Alert.Rule">
+          <Name>Windows Server Backup Failed Due To Low Free Space Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToLowFreeSpaceStorage.Alert.Rule.AlertMessage">
+          <Name>Backup Failed Due To Low Free Space Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToMissingStorage.Alert.Rule">
+          <Name>Windows Server Backup Failed Due To Missing Storage Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToMissingStorage.Alert.Rule.AlertMessage">
+          <Name>Backup Failed Due To Missing Storage Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToRecoveryPlanning.Alert.Rule">
+          <Name>Windows Server Backup Failed Due To Recovery Planning Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToRecoveryPlanning.Alert.Rule.AlertMessage">
+          <Name>Backup Failed Due To Recovery Planning Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToRemoteFolderNotWriteable.Alert.Rule">
+          <Name>Windows Server Backup Failed Due To Remote Folder Not Writeable Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToRemoteFolderNotWriteable.Alert.Rule.AlertMessage">
+          <Name>Backup Failed Due To Remote Folder Not Writeable Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToScheduleSettings.Alert.Rule">
+          <Name>Windows Server Backup Failed Due To Schedule Settings Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToScheduleSettings.Alert.Rule.AlertMessage">
+          <Name>Backup Failed Due To Schedule Settings Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToSnapshot.Alert.Rule">
+          <Name>Windows Server Backup Failed Due To Snapshot Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedDueToSnapshot.Alert.Rule.AlertMessage">
+          <Name>Backup Failed Due To Snapshot Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedForVolume.Alert.Rule">
+          <Name>Windows Server Backup Failed For Volume Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedForVolume.Alert.Rule.AlertMessage">
+          <Name>Backup Failed For Volume Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedToStartWithError.Alert.Rule">
+          <Name>Windows Server Backup Failed To Start With Error Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupFailedToStartWithError.Alert.Rule.AlertMessage">
+          <Name>Backup Failed To Start With Error Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupMetadataIsCorrupted.Alert.Rule">
+          <Name>Windows Server Backup Metadata Is Corrupted Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupMetadataIsCorrupted.Alert.Rule.AlertMessage">
+          <Name>Backup Metadata Is Corrupted Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupOfVolumeIsCorrupted.Alert.Rule">
+          <Name>Windows Server Backup Of Volume Is Corrupted Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.BackupOfVolumeIsCorrupted.Alert.Rule.AlertMessage">
+          <Name>Backup Of Volume Is Corrupted Alert</Name>
+          <Description>Event Description: {0}</Description>
         </DisplayString>
         <DisplayString ElementID="SCOM.WindowsServerBackup.CompletedWithWarningsDueToDiskErrors.Alert.Rule">
           <Name>Windows Server Backup Completed With Warnings Due To Disk Errors Alert Rule</Name>
         </DisplayString>
         <DisplayString ElementID="SCOM.WindowsServerBackup.CompletedWithWarningsDueToDiskErrors.Alert.Rule.AlertMessage">
-          <Name>Windows Server Backup Completed With Warnings Due To Disk Errors Alert</Name>
+          <Name>Backup Completed With Warnings Due To Disk Errors Alert</Name>
           <Description>Event Description: {0}</Description>
         </DisplayString>
         <DisplayString ElementID="SCOM.WindowsServerBackup.LastBackupStatus.Monitor">
@@ -765,22 +1277,13 @@
         <DisplayString ElementID="SCOM.WindowsServerBackup.LastBackupStatus.Monitor" SubElementID="SecondEventRaised">
           <Name>Second Event Raised</Name>
         </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.Root.Folder">
-          <Name>Windows Server Backup</Name>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.State.View">
-          <Name>State</Name>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.StorageFreeSpaceIsLow.Alert.Rule">
-          <Name>Windows Server Backup Storage Free Space Is Low Alert Rule</Name>
-        </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.StorageFreeSpaceIsLow.Alert.Rule.AlertMessage">
-          <Name>Windows Server Backup Storage Free Space Is Low Alert</Name>
-          <Description>Event Description: {0}</Description>
-        </DisplayString>
         <DisplayString ElementID="SCOM.WindowsServerBackup.MissingBackupCompletedEvent.Monitor">
           <Name>Missing Event for Backup Job Completed Monitor</Name>
           <Description />
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.MissingBackupCompletedEvent.Monitor.AlertMessage">
+          <Name>Missing Backup Job Event for a Successful Backup</Name>
+          <Description>The Backup Job does not appear to have completed with success in the specified time window.</Description>
         </DisplayString>
         <DisplayString ElementID="SCOM.WindowsServerBackup.MissingBackupCompletedEvent.Monitor" SubElementID="MissingEventRaised">
           <Name>Missing Event Raised</Name>
@@ -788,9 +1291,19 @@
         <DisplayString ElementID="SCOM.WindowsServerBackup.MissingBackupCompletedEvent.Monitor" SubElementID="TimerEventRaised">
           <Name>Timer Event Raised</Name>
         </DisplayString>
-        <DisplayString ElementID="SCOM.WindowsServerBackup.MissingBackupCompletedEvent.Monitor.AlertMessage">
-          <Name>Windows Server Backup Missing Job Event for Completed Successfully</Name>
-          <Description>The Backup Job does not appear to have completed with success in the specified time window.</Description>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.ScheduledBackupGroupPolicyConflict.Alert.Rule">
+          <Name>Windows Server Backup Scheduled Backup Group Policy Conflict Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.ScheduledBackupGroupPolicyConflict.Alert.Rule.AlertMessage">
+          <Name>Backup Schedule Group Policy Conflict Alert</Name>
+          <Description>Event Description: {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.StorageFreeSpaceIsLow.Alert.Rule">
+          <Name>Windows Server Backup Storage Free Space Is Low Alert Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="SCOM.WindowsServerBackup.StorageFreeSpaceIsLow.Alert.Rule.AlertMessage">
+          <Name>Backup Storage Free Space Is Low Alert</Name>
+          <Description>Event Description: {0}</Description>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>
