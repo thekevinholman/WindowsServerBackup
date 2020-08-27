@@ -6,4 +6,4 @@ Rules and Monitors to alert on backup failures, success, and health.
 
 Change History:  
 1.0.0.0 - Original Release  
-1.0.0.1 - 6-12-2020 - New and updated rules and the Last Backup monitor to inclue more events for possible backup failures.  
+1.0.0.1 - 6-12-2020 - New and updated rules and the Last Backup monitor to include more events for possible backup failures. 
